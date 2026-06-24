@@ -315,13 +315,21 @@ Workers 版通过 Cloudflare Dashboard 在线配置环境变量。
 
 | 变量名 | 说明 | 默认值 |
 |--------|------|--------|
-| `SUBAPI` | 订阅转换后端 API | `subapi.cmliussss.net` |
+| `SUBAPI` | 订阅转换后端 API | `https://subapi.cmliussss.net` |
 | `PS` | 节点备注后缀（追加到节点名后） | 空 |
 | `DLS` | ADDCSV 速度下限筛选（MB/s） | `7` |
 | `CONCUR` | GrainTCP 并发竞速数（1-16） | `4` |
 | `SUB_TOKEN` | Desire 裂变 Token（留空不启用） | 空 |
 | `KEY` | 动态 UUID 密钥（启用后自动生成时效性 UUID） | 空 |
 | `UUID_REFRESH` | UUID 刷新周期（秒） | `86400` |
+
+#### 订阅转换模板
+
+| 变量名 | 说明 | 默认值 |
+|--------|------|--------|
+| `CLASH_CONFIG` | Clash 转换配置文件 URL | `https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini` |
+| `SINGBOX_CONFIG_V11` | sing-box 1.11 配置模板 URL | `https://raw.githubusercontent.com/sinspired/sub-store-template/main/1.11.x/sing-box.json` |
+| `SINGBOX_CONFIG_V12` | sing-box 1.12 配置模板 URL | `https://raw.githubusercontent.com/sinspired/sub-store-template/main/1.12.x/sing-box.json` |
 
 #### ECH 配置
 
@@ -338,6 +346,15 @@ Workers 版通过 Cloudflare Dashboard 在线配置环境变量。
 | `TG_BOT_TOKEN` | Bot Token | 找 @BotFather 创建机器人获取 |
 | `TG_CHAT_ID` | 你的用户 ID | 找 @userinfobot 获取 |
 
+#### Cloudflare 统计配置
+
+| 变量名 | 说明 | 配置方式 |
+|--------|------|----------|
+| `CF_ID` | Cloudflare Account ID | 与 `CF_TOKEN` 搭配使用 |
+| `CF_TOKEN` | Cloudflare API Token | 推荐方式，需具备读取统计权限 |
+| `CF_EMAIL` | Cloudflare 账号邮箱 | 与 `CF_KEY` 搭配使用 |
+| `CF_KEY` | Cloudflare Global API Key | 兼容方式，不推荐长期暴露 |
+
 #### 优选节点来源
 
 | 变量名 | 说明 | 格式 |
@@ -351,16 +368,23 @@ Workers 版通过 Cloudflare Dashboard 在线配置环境变量。
 | 变量名 | 说明 | 默认值 |
 |--------|------|--------|
 | `LOGIN_PAGE_TITLE` | 登录页浏览器标题 | `Worker Login` |
-| `DASHBOARD_TITLE` | 后台管理页标题 | `烈火控制台` |
+| `DASHBOARD_TITLE` | 后台管理页标题 | `烈火控制台 · Glass LH` |
 | `TG_GROUP_URL` | 交流群链接（登录页按钮） | `https://t.me/zyssadmin` |
-| `GITHUB_URL` | 项目地址（登录页按钮） | GitHub 项目链接 |
+| `SITE_URL` | 网站链接（登录页按钮） | `https://blog.2026565.xyz/` |
+| `GITHUB_URL` | 项目地址（登录页按钮） | `https://github.com/xtgm/stallTCP1.32V2` |
 | `PROXY_CHECK_URL` | ProxyIP 检测站链接 | `https://kaic.hidns.co/` |
+
+#### 白名单配置
+
+| 变量名 | 说明 | 格式 |
+|--------|------|------|
+| `WL_IP` | 管理员 IP 白名单，命中后可免登录访问后台 | 多个 IP 用英文逗号分隔 |
 
 #### D1 数据库绑定
 
 | 变量名 | 类型 | 说明 |
 |--------|------|------|
-| `DB` | D1 数据库 | 必须绑定，变量名必须是 `DB` |
+| `DB` | D1 数据库绑定 | 必须绑定，变量名必须是 `DB`，不是普通文本环境变量 |
 
 ---
 
@@ -770,7 +794,7 @@ ECH 开启后，系统自动对订阅内容做以下处理：
 - `ADD`：手动添加优选 IP（格式 `IP:端口#备注`，每行一个）
 - `ADDAPI`：填入远程 TXT 文件 URL（每行一个 URL）
 - `ADDCSV`：填入远程 CSV 文件 URL
-- `DLS`：速度下限筛选（用于 ADDCSV）
+- `DLS`：速度下限筛选（用于 ADDCSV，单位 MB/s）
 
 #### 访问日志（Workers 版）
 
@@ -968,7 +992,7 @@ TXT 文件内容格式同 ADD。
 ```
 https://example.com/speed.csv
 ```
-CSV 需包含 IP、端口、TLS 列，配合 `DLS` 环境变量过滤低速节点。
+CSV 需包含 IP、端口、TLS 列，配合 `DLS` 环境变量过滤低速节点（单位 MB/s，默认 `7`）。
 
 Snippets 版只支持单个 ProxyIP（`PIP` 配置项）。
 
