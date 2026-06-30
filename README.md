@@ -92,9 +92,9 @@ GrainTCPV1 是一个部署在 Cloudflare 上的代理节点管理系统，提供
 | Desire 裂变 | ✅ | ❌ | SUB_TOKEN 优选 IP 批量裂变 |
 | 白名单/访问日志 | ✅ | ❌ | IP 白名单免登录 + 日志记录 |
 | 环境变量配置 | ✅ | ❌ | Dashboard 在线修改配置 |
-| CF 用量 TG 仪表盘 | ✅ | ⚠️ | Cron 每 30 分钟刷新 Telegram 仪表盘（Snippets 无 Cron，仅命令查询） |
-| /stats 命令查询 | ✅ | ✅ | Telegram 发送 `/stats` 实时查询用量 |
-| Zone HTTP 统计 | ✅ | ✅ | 区域级请求/威胁/缓存/带宽 + 国家/状态码/设备分布 |
+| CF 用量 TG 仪表盘 | ✅ | ❌ | Cron 每 30 分钟刷新 Telegram 仪表盘（仅 Worker 版，依赖 D1/Cron） |
+| /stats 命令查询 | ✅ | ❌ | Telegram 发送 `/stats` 实时查询用量（仅 Worker 版） |
+| Zone HTTP 统计 | ✅ | ❌ | 区域级请求/威胁/缓存/带宽 + 国家/状态码/设备分布（仅 Worker 版） |
 
 ---
 
@@ -865,8 +865,8 @@ ECH 开启后，系统自动对订阅内容做以下处理：
 
 ### Snippets / Pages 说明
 
-- **Snippets**：不支持 Cron Trigger → 仅 `/stats` 命令查询可用，无定时仪表盘
-- **Pages**：Cron 支持有限 → 主要靠 `/stats` 命令；定时刷新需 Pages 支持 scheduled
+- **Snippets**：CF 用量监控功能**未在 Snippets 版实现**（依赖 D1 数据库存储仪表盘状态 + Cron 定时触发，Snippets 均不支持）。此功能仅 Worker 版可用。
+- **Pages**：`/stats` 命令查询可用；Cron 定时刷新需 Pages 支持 scheduled。
 
 ---
 
@@ -1064,7 +1064,7 @@ Snippets 版只支持单个 ProxyIP（`PIP` 配置项）。
 1. 确认已在 CF Workers 后台添加 Cron Trigger：`*/30 * * * *`
 2. 确认后台「CF 用量仪表盘」开关已开启并保存
 3. 确认 `TG_BOT_TOKEN` + 推送 Chat ID（或 `TG_CHAT_ID`）已配置
-4. Snippets 版不支持 Cron，无定时刷新（只能用 `/stats` 命令）
+4. 此功能仅 Worker 版支持（依赖 D1 + Cron），Snippets 版未实现
 
 **Q: 发 `/stats` 没反应？**
 
